@@ -3881,14 +3881,7 @@ ection>
 
 
 
- const input=document.getElementById('mathSearch');
- const list=document.getElementById('mathChapterList');
- const count=document.getElementById('mathCount');
- if(!input||!list||!count)return;
- const cards=[...list.querySelectorAll('.math-chapter')];
- function filter(){const q=input.value.trim().toLowerCase();let n=0;cards.forEach(c=>{const show=c.dataset.search.includes(q)||(c.textContent||'').toLowerCase().includes(q);c.hidden=!show;if(show)n++;});count.textContent=n+' of '+cards.length+' chapters shown';}
- input.addEventListener('input',filter);filter();
-})();
+ 
 </script>
 <style>
 #mathematics-roadmap .math-toolbar{display:grid;grid-template-columns:1fr;gap:.4rem;margin:1rem 0}
@@ -3922,5 +3915,49 @@ ection>
 #sat-aptitude .sat-source-note{margin-top:1rem;font-size:.92rem;line-height:1.6}
 </style>
 
-</body>
+</body><script>
+(function () {
+    const nav = document.getElementById('nav');
+    const menuButton = document.querySelector('.menu-button');
+    const darkButton = document.querySelector('button[aria-label="Toggle dark mode"]');
+
+    function applyDarkMode(enabled) {
+        document.body.classList.toggle('dark', enabled);
+
+        if (darkButton) {
+            darkButton.textContent = enabled ? '☀️' : '🌙';
+            darkButton.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        }
+
+        try {
+            localStorage.setItem('studenttoolkit-dark', enabled ? 'true' : 'false');
+        } catch (e) {
+            // Ignore if localStorage is unavailable
+        }
+    }
+
+    window.toggleMenu = function () {
+        if (!nav || !menuButton) return;
+
+        const isOpen = nav.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    window.toggleDarkMode = function () {
+        const enabled = !document.body.classList.contains('dark');
+        applyDarkMode(enabled);
+    };
+
+    try {
+        const saved = localStorage.getItem('studenttoolkit-dark');
+        if (saved === 'true') {
+            applyDarkMode(true);
+        } else if (saved === 'false') {
+            applyDarkMode(false);
+        }
+    } catch (e) {
+        // Ignore if localStorage is unavailable
+    }
+})();
+</script>
 </html>
